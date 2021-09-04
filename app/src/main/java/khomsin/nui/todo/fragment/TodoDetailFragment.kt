@@ -42,17 +42,7 @@ class TodoDetailFragment : BaseFragment<FragmentTodoDetailBinding>() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as MainActivity).viewModel
 
-        initial()
         setEvent()
-    }
-
-    private fun initial(){
-        viewModel?.getAddTaskResult()?.observe(viewLifecycleOwner,{
-            it.data.let {
-                Toast.makeText(context, "Add Success", Toast.LENGTH_SHORT).show()
-               view?.findNavController()?.navigate(TodoDetailFragmentDirections.actionTodoDetailFragmentToTodoListFragment(token))
-            }
-        })
     }
 
     private fun setEvent(){
@@ -60,6 +50,13 @@ class TodoDetailFragment : BaseFragment<FragmentTodoDetailBinding>() {
             if(isValidateDescription()){
                 viewModel?.getAddTask(token,AddTaskModel.Request().apply {
                     this.description = binding.edtDescription.text.toString()
+                })
+
+                viewModel?.getAddTaskResult()?.observe(viewLifecycleOwner,{
+                    it.data.let {
+                        Toast.makeText(context, "Add Success", Toast.LENGTH_SHORT).show()
+                        activity?.onBackPressed()
+                    }
                 })
             }
         }

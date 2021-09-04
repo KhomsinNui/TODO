@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import khomsin.nui.todo.model.AddTaskModel
 import khomsin.nui.todo.model.LoginModel
 import khomsin.nui.todo.model.RegisterModel
+import khomsin.nui.todo.model.UpdateTaskModel
 import khomsin.nui.todo.repository.TodoRepository
 import kotlinx.coroutines.launch
 
@@ -34,7 +35,7 @@ class TodoViewModel(
 
     fun getDeleteTaskResult() = todoRepository.getDeleteTaskResult()
 
-    fun getUpdateTask(token: String?,id : String?) = todoRepository.getUpdateTask(token,id)
+    fun getUpdateTask(token: String?,id : String?,data : UpdateTaskModel.Request) = todoRepository.getUpdateTask(token,id,data)
 
     fun getUpdateTaskResult() = todoRepository.getUpdateTaskResult()
 

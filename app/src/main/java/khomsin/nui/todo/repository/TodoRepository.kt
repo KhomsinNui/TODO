@@ -20,7 +20,7 @@ class TodoRepository(private val context: Context, private val db: TodoInstance)
     private val getAllTaskResponseLiveData: MutableLiveData<TaskModel> = MutableLiveData()
     private val getAddTaskModelResponseLiveData: MutableLiveData<AddTaskModel.Response> = MutableLiveData()
     private val getDeleteTaskModelResponseLiveData: MutableLiveData<DeleteTaskModel> = MutableLiveData()
-    private val getUpdateTaskModelResponseLiveData: MutableLiveData<UpdateTaskModel> = MutableLiveData()
+    private val getUpdateTaskModelResponseLiveData: MutableLiveData<UpdateTaskModel.Response> = MutableLiveData()
     private val getLogOutTaskModelResponseLiveData: MutableLiveData<LogOutModel> = MutableLiveData()
 
     fun userRegister(data: RegisterModel.Request) {
@@ -133,12 +133,12 @@ class TodoRepository(private val context: Context, private val db: TodoInstance)
         )
     }
 
-    fun getUpdateTask(token: String?, id: String?) {
-        apiService.getUpdateTaskResponse(getHeader(token), id).enqueue(
-            object : Callback<UpdateTaskModel> {
+    fun getUpdateTask(token: String?, id: String?,data : UpdateTaskModel.Request) {
+        apiService.getUpdateTaskResponse(getHeader(token), id,data).enqueue(
+            object : Callback<UpdateTaskModel.Response> {
                 override fun onResponse(
-                    call: Call<UpdateTaskModel>,
-                    model: Response<UpdateTaskModel>
+                    call: Call<UpdateTaskModel.Response>,
+                    model: Response<UpdateTaskModel.Response>
                 ) {
                     if (model.isSuccessful) {
                         getUpdateTaskModelResponseLiveData.postValue(model.body())
@@ -147,7 +147,7 @@ class TodoRepository(private val context: Context, private val db: TodoInstance)
                     }
                 }
 
-                override fun onFailure(call: Call<UpdateTaskModel>, t: Throwable) {
+                override fun onFailure(call: Call<UpdateTaskModel.Response>, t: Throwable) {
                     getUpdateTaskModelResponseLiveData.postValue(null)
                     Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
                 }
@@ -197,7 +197,7 @@ class TodoRepository(private val context: Context, private val db: TodoInstance)
         return getDeleteTaskModelResponseLiveData
     }
 
-    fun getUpdateTaskResult(): LiveData<UpdateTaskModel> {
+    fun getUpdateTaskResult(): LiveData<UpdateTaskModel.Response> {
         return getUpdateTaskModelResponseLiveData
     }
 

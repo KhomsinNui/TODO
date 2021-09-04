@@ -21,6 +21,7 @@ import khomsin.nui.todo.viewmodel.TodoViewModel
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.snackbar.Snackbar
 import khomsin.nui.todo.model.TaskModel
+import khomsin.nui.todo.model.UpdateTaskModel
 
 
 class TodoListFragment : BaseFragment<FragmentTodoListBinding>() {
@@ -57,20 +58,6 @@ class TodoListFragment : BaseFragment<FragmentTodoListBinding>() {
             }
         })
 
-        viewModel?.getDeleteTaskResult()?.observe(viewLifecycleOwner, {
-            if (it.success == true) {
-                Toast.makeText(context, "Delete Success", Toast.LENGTH_SHORT).show()
-                viewModel?.getAllTask(token)
-            }
-        })
-
-        viewModel?.getUpdateTaskResult()?.observe(viewLifecycleOwner, {
-            if (it.success == true) {
-                Toast.makeText(context, "Update Success", Toast.LENGTH_SHORT).show()
-                viewModel?.getAllTask(token)
-            }
-        })
-
         viewModel?.getLogOutResult()?.observe(viewLifecycleOwner, {
             if (it.success == true) {
                 view?.findNavController()?.navigate(TodoListFragmentDirections.actionTodoListFragmentToLoginFragment())
@@ -100,6 +87,12 @@ class TodoListFragment : BaseFragment<FragmentTodoListBinding>() {
                             "Delete"
                         ) { p0, p1 ->
                             viewModel?.getDeleteTask(token,data.id)
+                            viewModel?.getDeleteTaskResult()?.observe(viewLifecycleOwner, {
+                                if (it.success == true) {
+                                    Toast.makeText(context, "Delete Success", Toast.LENGTH_SHORT).show()
+                                    viewModel?.getAllTask(token)
+                                }
+                            })
                         }
                         setNegativeButton("Cancel", null)
                     }.create().show()
@@ -114,7 +107,15 @@ class TodoListFragment : BaseFragment<FragmentTodoListBinding>() {
                         setPositiveButton(
                             "Update"
                         ) { p0, p1 ->
-                            viewModel?.getUpdateTask(token,data.id)
+                            viewModel?.getUpdateTask(token,data.id, UpdateTaskModel.Request().apply {
+                                this.completed = true
+                            })
+                            viewModel?.getUpdateTaskResult()?.observe(viewLifecycleOwner, {
+                                if (it.success == true) {
+                                    Toast.makeText(context, "Update Success", Toast.LENGTH_SHORT).show()
+                                    viewModel?.getAllTask(token)
+                                }
+                            })
                         }
                         setNegativeButton("Cancel", null)
                     }.create().show()
