@@ -57,12 +57,6 @@ class TodoListFragment : BaseFragment<FragmentTodoListBinding>() {
                 todoListAdapter.differ.submitList(it.data)
             }
         })
-
-        viewModel?.getLogOutResult()?.observe(viewLifecycleOwner, {
-            if (it.success == true) {
-                view?.findNavController()?.navigate(TodoListFragmentDirections.actionTodoListFragmentToLoginFragment())
-            }
-        })
     }
 
     private fun setEvent(){
@@ -72,6 +66,11 @@ class TodoListFragment : BaseFragment<FragmentTodoListBinding>() {
 
         binding.btnLogOut.setOnClickListener {
             viewModel?.getLogOut(token)
+            viewModel?.getLogOutResult()?.observe(viewLifecycleOwner, {
+                if (it.success == true) {
+                    view?.findNavController()?.navigate(TodoListFragmentDirections.actionTodoListFragmentToLoginFragment())
+                }
+            })
         }
     }
 
